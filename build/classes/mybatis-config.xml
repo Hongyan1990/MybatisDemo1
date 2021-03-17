@@ -5,7 +5,7 @@
     <properties resource="db.properties">
     	<property  name ="driver"  value ="com.mysql.jdbc.Driver" />
     	<property  name ="username"  value ="root" />
-		<property  name ="password"  value ="hong180991.." />
+		<property  name ="password"  value ="000" />
     </properties>
     <settings>
         <setting name="logImpl" value="LOG4J"/>
@@ -27,5 +27,7 @@
     </environments>
     <mappers>
         <mapper resource="com/mybatis/mapper/UserMapper.xml" />
+        <mapper resource="com/mybatis/mapper/ShoppingCarMapper.xml" />
+        <mapper resource="com/mybatis/mapper/GamePlayerMapper.xml" />
     </mappers>
 </configuration>

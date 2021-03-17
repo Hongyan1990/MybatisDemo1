@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.GamePlayerMapper">
+    <resultMap type="com.mybatis.po.Gamer" id="gamerInfoMap">
+        <id property="id" column="id" />
+        <result property="name" column="g_name" />
+        <result property="profession" column="g_profession" />
+        <association property="professionalAttributes" javaType="java.util.HashMap">
+            <discriminator javaType="int" column="g_profession" >
+                <case value="1" resultMap="warriorMap" />
+                <case value="2" resultMap="magicianMap" />
+            </discriminator>
+        </association>
+    </resultMap>
+    <resultMap type="java.util.HashMap" id="warriorMap">
+        <result property="power" column="g_power" />
+    </resultMap>
+    <resultMap type="java.util.HashMap" id="magicianMap">
+        <result property="rang" column="g_rang" />
+    </resultMap>
+    <select id="queryMarriorGamePlayer" parameterType="int" resultMap="gamerInfoMap">
+        select 
+            G.id,
+            G.name as g_name,
+            G.profession as g_profession,
+            W.power as g_power
+        from gamer G left join warrior_info W on G.id=W.gpid
+        where G.id=#{id}
+    </select>
+    <select id="queryMagicianGamePlayer" parameterType="int" resultMap="gamerInfoMap">
+        select
+            G.id,
+            G.name as g_name,
+            G.profession as g_profession,
+            M.rang as g_rang
+        from gamer G left join magician_info M on G.id=M.gpid
+        where G.id=#{id}
+    </select>
+</mapper>

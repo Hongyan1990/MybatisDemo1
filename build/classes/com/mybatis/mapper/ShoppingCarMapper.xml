@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.ShoppingCarMapper">
+    <resultMap type="com.mybatis.po.ShoppingCar" id="shoppingCarMap">
+        <id column="car_id" property="cid" />
+        <result column="car_name" property="cname" />
+        <association property="user" javaType="com.mybatis.po.MyUser" >
+            <id column="user_id" property="uid" />
+            <result column="user_name" property="uname" />
+            <result column="user_sex" property="usex" />
+        </association>
+    </resultMap>
+    <select id="queryShoppingCar" parameterType="int" resultMap="shoppingCarMap" >
+        select 
+            c.cid as car_id,
+            c.cname as car_name,
+            c.uid as car_user_id,
+            u.uid as user_id,
+            u.uname as user_name,
+            u.usex as user_sex
+        from 
+            car c left outer join user u on c.uid=u.uid
+        where
+            c.cid=#{cid}
+    </select>
+    
+    <resultMap type="com.mybatis.po.Goods" id="goodsMap">
+        <id column="goods_id" property="gid" />
+        <result column="goods_name" property="gname" />
+        <result column="goods_price" property="gprice" />
+        <collection property="replys" column="goods_id" select="queryReply" ofType="com.mybatis.po.Reply" />
+    </resultMap>
+    
+    <select id="queryGoodsInfo" parameterType="int" resultMap="goodsMap">
+        select 
+            G.gid as goods_id, 
+            G.gname as goods_name, 
+            G.gprice as goods_price 
+        from goods G where G.gid=#{gid}
+    </select>
+    
+    <select id="queryReply" parameterType="int" resultType="com.mybatis.po.Reply" >
+        select * from reply R where R.gid=#{gid}
+    </select>
+</mapper>

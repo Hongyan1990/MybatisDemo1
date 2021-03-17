@@ -27,5 +27,7 @@
     </environments>
     <mappers>
         <mapper resource="com/mybatis/mapper/UserMapper.xml" />
+        <mapper resource="com/mybatis/mapper/ShoppingCarMapper.xml" />
+        <mapper resource="com/mybatis/mapper/GamePlayerMapper.xml" />
     </mappers>
 </configuration>
