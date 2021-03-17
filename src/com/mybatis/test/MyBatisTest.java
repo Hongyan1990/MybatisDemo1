@@ -2,14 +2,15 @@ package com.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import com.mybatis.po.Gamer;
+import com.mybatis.po.MyUser;
+import com.mybatis.po.UserQueryInfo;
 
 public class MyBatisTest {
 
@@ -26,23 +27,26 @@ public class MyBatisTest {
 //			Goods g = ss.selectOne("com.mybatis.mapper.ShoppingCarMapper.queryGoodsInfo", 1);
 //			System.out.println(g);
 			
-			Gamer g = ss.selectOne("com.mybatis.mapper.GamePlayerMapper.queryMarriorGamePlayer", 1);
-			System.out.println("name=" + g.getName() + ", profession=" + g.getProfession());
-			Map m = g.getProfessionalAttributes();
-			System.out.println("power=" + m.get("power"));
+//			Gamer g = ss.selectOne("com.mybatis.mapper.GamePlayerMapper.queryMarriorGamePlayer", 1);
+//			System.out.println("name=" + g.getName() + ", profession=" + g.getProfession());
+//			Map m = g.getProfessionalAttributes();
+//			System.out.println("power=" + m.get("power"));
+//			
+//			Gamer g2 = ss.selectOne("com.mybatis.mapper.GamePlayerMapper.queryMagicianGamePlayer", 2);
+//			System.out.println("name=" + g2.getName() + ", profession=" + g2.getProfession());
+//			Map m2 = g2.getProfessionalAttributes();
+//			System.out.println("rang=" + m2.get("rang"));
 			
-			Gamer g2 = ss.selectOne("com.mybatis.mapper.GamePlayerMapper.queryMagicianGamePlayer", 2);
-			System.out.println("name=" + g2.getName() + ", profession=" + g2.getProfession());
-			Map m2 = g2.getProfessionalAttributes();
-			System.out.println("rang=" + m2.get("rang"));
 			
-			
-//			MyUser myUser = new MyUser();
-//			UserQueryInfo userInstance = new UserQueryInfo();
-//			myUser.setUid(6);
-//			userInstance.setUserInstance(myUser);
-//			MyUser mu = ss.selectOne("com.mybatis.mapper.UserMapper.selectUserById", userInstance);
-//			System.out.println(mu);
+			MyUser myUser = new MyUser();
+			UserQueryInfo userInstance = new UserQueryInfo();
+			myUser.setUid(6);
+			myUser.setUsex("ÄÐ");
+			userInstance.setUserInstance(myUser);
+			List<MyUser>  mus = ss.selectList("com.mybatis.mapper.UserMapper.findUserList", userInstance);
+			for(MyUser mu : mus) {
+				System.out.println(mu);
+			}
 //			
 //			//Ä£ºý²éÑ¯
 //			List<MyUser> users = ss.selectList("com.mybatis.mapper.UserMapper.selectUserByName", "ºì");

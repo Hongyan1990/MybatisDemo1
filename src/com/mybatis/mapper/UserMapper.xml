@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="_name" property="uname" />
     </resultMap>
     <!-- 根据uid查询用户 -->
+    
     <select id="selectUserById" parameterType="com.mybatis.po.UserQueryInfo" resultType="myUser" resultMap="userResultMap">
         select uid _id, uname _name from user where uid = #{userInstance.uid}
     </select>
@@ -27,4 +28,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteUser" parameterType="Integer">
         delete from user where uid=#{uid}
     </delete>
+    
+    <sql id="query_user_where">
+    	<if test="userInstance != null">
+			<if test="userInstance.usex != null and userInstance.usex != ''">
+				and U.usex=#{userInstance.usex}
+			</if>
+			<if test="userInstance.uname!=null and userInstance.uname!=''">
+				and U.uname like '%${userInstance.uname}%'
+			</if>
+		</if>
+    </sql>
+    
+    <select id="findUserList" parameterType="com.mybatis.po.UserQueryInfo" resultType="com.mybatis.po.MyUser">
+    	select * from user U
+    		<where>
+    			<include refid="query_user_where"></include>
+    		</where>
+    </select>
 </mapper>
