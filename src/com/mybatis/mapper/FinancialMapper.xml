@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.FinancialMapper">
+    
+    <resultMap type="com.mybatis.po.BatchItem" id="BatchInfoMap">
+        <id property="batch_id" column="batch_id" />
+        <result property="cus_id" column="cus_id" />
+        <result property="number" column="number" />
+        <result property="createtime" column="createtime" javaType="java.util.Date" />
+        <result property="note" column="note" />
+        <association property="customer" javaType="com.mybatis.po.Customer">
+            <id property="cus_id" column="cus_id" />
+            <result property="username" column="username" />
+            <result property="acno" column="acno" />
+            <result property="gender" column="gender" />
+        </association>
+    </resultMap>
+    <select id="queryBatchCustomer" resultMap="BatchInfoMap" >
+        select 
+		    batch.*, customer.username, customer.acno
+		from 
+		    batch, customer
+		where batch.cus_id = customer.cus_id
+    </select>
+    
+    <resultMap type="com.mybatis.po.BatchItem" id="BatchAndBatchDetailMap" extends="BatchInfoMap" >
+        <collection property="batchDetails" ofType="com.mybatis.po.BatchDetail" >
+            <id property="id" column="id" />
+            <result property="batch_id" column="batch_id" />
+            <result property="product_id" column="product_id" />
+            <result property="product_num" column="product_num" />
+        </collection>
+    </resultMap>
+    
+    <select id="queryBatchAndBatchDetail" parameterType="int" resultMap="BatchAndBatchDetailMap" >
+        select
+		    batch.*, 
+		    customer.username, 
+		    customer.acno, 
+		    batchdetail.product_id, 
+		    batchdetail.product_num
+		from
+		    batch, customer, batchdetail
+		where
+		    batch.cus_id=customer.cus_id and batchdetail.batch_id=batch.batch_id and batch.batch_id=#{id}
+    </select>
+    
+    <resultMap type="com.mybatis.po.Customer" id="queryCustomerInfoMap">
+        <result property="username" column="username" />
+        <result property="acno" column="acno" />
+        <collection property="batchs" ofType="com.mybatis.po.Batch">
+            <id property="batch_id" column="batch_id" />
+            <result property="cus_id" column="cus_id" />
+            <result property="number" column="number" /> 
+            <result property="createtime" column="createtime" javaType="java.util.Date" />
+            <result property="note" column="note" />
+            <collection property="batchDetails" ofType="com.mybatis.po.BatchDetail" >
+                <id property="id" column="id" />
+                <result property="batch_id" column="batch_id" />
+                <result property="product_id" column="product_id" />
+                <result property="product_num" column="product_num" />
+                <association property="finacialProduct" javaType="com.mybatis.po.FinacialProduct">
+                    <id property="id" column="product_id" />
+                    <result property="name" column="name" />
+                    <result property="price" column="price" /> 
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="queryCustomerInfo" resultMap="queryCustomerInfoMap" >
+        SELECT
+		    batch.*,
+		    customer.username,
+		    customer.acno,
+		    batchdetail.product_id,
+		    batchdetail.product_num,
+		    finacial_product.`name`,
+		    finacial_product.price
+		FROM
+		    batch,
+		    customer,
+		    batchdetail,
+		    finacial_product
+		WHERE
+		    batch.cus_id=customer.cus_id
+		    AND batchdetail.batch_id=batch.batch_id
+		    AND finacial_product.product_id=batchdetail.product_id
+    </select>
+</mapper>
